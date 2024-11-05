@@ -1,0 +1,10 @@
+lightning
+torch
+torchaudio
+timm
+wandb
+numpy
+pandas
+scikit-learn
+python-dotenv
+tqdm
