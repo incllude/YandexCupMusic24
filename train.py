@@ -1,6 +1,7 @@
 from lightning.pytorch.callbacks import ModelCheckpoint, LearningRateMonitor
+from utils import cover_dataloader, load_config, seed_everything
 from lightning.pytorch.loggers import WandbLogger
-from utils import cover_dataloader, Config
+from argparse import ArgumentParser
 from modules import MainModule
 from dotenv import load_dotenv
 from models import CNNModel
@@ -9,14 +10,18 @@ import wandb
 import os
 
 
+parser = ArgumentParser()
+parser.add_argument('--config_path', type=str, required=True)
+args = parser.parse_args()
+
 load_dotenv()
 WANDB_KEY = os.getenv("WANDB_KEY")
 if not WANDB_KEY:
     raise ValueError("WANDB_KEY not found in .env file")
 
 
-config = Config()
-config.seed_everything()
+config = load_config(args.config_path)
+seed_everything()
 wandb.login(key=WANDB_KEY)
 
 

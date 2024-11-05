@@ -8,35 +8,44 @@ import pandas as pd
 import numpy as np
 import random
 import torch
+import yaml
 import os
 
 
 class Config:
-    
-    data_path = Path("...")
-    file_ext = "npy"
-    n_neg_samples = 5
-    batch_size = 200
-    epoch_size = 0.25
-    random_state = 43
-    epochs = 30
-    
-    def seed_everything(self):
-        torch.backends.cudnn.deterministic = False
-        torch.cuda.manual_seed(self.random_state)
-        torch.cuda.manual_seed_all(self.random_state)
-        torch.manual_seed(self.random_state)
-        np.random.seed(self.random_state)
-        random.seed(self.random_state)
+    pass
 
 
 class BatchDict(TypedDict):
+    
     anchor: torch.Tensor
     anchor_id: int
     anchor_clique: int
     positive: torch.Tensor
     negative: torch.Tensor
     negative_clique: int
+
+    
+def seed_everything(random_state):
+
+    torch.backends.cudnn.deterministic = False
+    torch.cuda.manual_seed(random_state)
+    torch.cuda.manual_seed_all(random_state)
+    torch.manual_seed(random_state)
+    np.random.seed(random_state)
+    random.seed(random_state)
+
+
+def load_config(config_path: str) -> Config:
+
+    with open(config_path, 'r') as f:
+        config_dict = yaml.safe_load(f)
+    
+    config = Config()
+    for key, value in config_dict.items():
+        setattr(config, key, value)
+        
+    return config
 
 
 def generate_random_binary_mask(image_height, image_width, mask_height, mask_width):

@@ -1,21 +1,21 @@
 from sklearn.metrics import pairwise_distances
+from argparse import ArgumentParser
 from utils import cover_dataloader
 from modules import MainModule
+from utils import load_config
 from models import CNNModel
-from utils import Config
 from tqdm import tqdm
 import numpy as np
-import argparse
 import torch
 
 
-parser = argparse.ArgumentParser()
-parser.add_argument('--ckpt_path', type=str, required=True,
-                    help='Path to trained model checkpoint file')
+parser = ArgumentParser()
+parser.add_argument('--ckpt_path', type=str, required=True)
+parser.add_argument('--config_path', type=str, required=True)
 args = parser.parse_args()
 
 
-config = Config()
+config = load_config(args.config_path)
 
 model = CNNModel(timm_model="timm/convnext_nano.d1h_in1k",
                  dropout=0.0)

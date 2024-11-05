@@ -1,0 +1,7 @@
+data_path: ./
+file_ext: npy
+n_neg_samples: 5
+batch_size: 200
+epoch_size: 0.25
+random_state: 43
+epochs: 30
