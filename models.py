@@ -5,6 +5,7 @@ import timm
 
 
 class ArcFace(nn.Module):
+
     def __init__(self,
                  emb_dim: int,
                  num_classes: int,
@@ -30,16 +31,19 @@ class ArcFace(nn.Module):
     
 class CNNModel(nn.Module):
     
-    def __init__(self, timm_model, dropout, fusion=nn.Identity()):
+    def __init__(self,
+                 timm_model: str,
+                 dropout: float,
+                 fusion: nn.Module = nn.Identity()):
         super(CNNModel, self).__init__()
         
         self.sequential = nn.Sequential(nn.BatchNorm2d(1),
                                         timm.create_model(timm_model, pretrained=True, in_chans=1, drop_rate=dropout),
                                         fusion)
-        try:
-            self.sequential[1].head.fc = nn.Identity()
-        except:
+        if hasattr(self.sequential[1], "fc"):
             self.sequential[1].fc = nn.Identity()
+        else:
+            self.sequential[1].head.fc = nn.Identity()
         
     def forward(self, x):
         return self.sequential(x)
